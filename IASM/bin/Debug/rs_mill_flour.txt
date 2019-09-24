@@ -1,0 +1,50 @@
+mov 0 milled
+mov 0 x
+mov 38 invinc
+mov 1 inc
+mov 27 limit
+mov Finished done
+
+mov 1859 invx
+mov 980 invy
+
+mov Hopper: hoppertext
+mov Controls: controltext
+
+mov : splitchar
+mov 0 hopperx
+mov 0 hoppery
+mov 0 controlx
+mov 0 controly
+
+delay 2000
+call x cursorpos
+
+split x splitchar hopperx hoppery
+print hoppertext
+print hopperx
+print hoppery
+
+delay 2000
+call x cursorpos
+split x splitchar controlx controly
+print controltext
+print controlx
+print controly
+
+:mill
+delay 1000
+call x clickpos invx invy
+delay 1000
+call x clickpos hopperx hoppery
+delay 1000
+call x clickpos controlx controly
+delay 1000
+
+:next
+add inc milled milled
+gotogr milled limit end
+goto mill
+
+:end
+print done

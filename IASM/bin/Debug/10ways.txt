@@ -1,0 +1,146 @@
+:top
+mov Ways: ways
+mov Way_Found wayFound
+
+mov Total_Runs totalRuns
+
+mov 0 wayCount
+
+mov 0 d1
+mov 0 d2
+mov 0 d3
+mov 0 d4
+mov 0 d5
+mov 0 d6
+mov 0 d7
+mov 0 d8
+mov 0 d9
+mov 0 d10
+
+mov 0 counter
+
+mov 0 showCounter
+
+mov 0 add
+
+mov 0 zero
+mov 1 one
+mov 10 ten
+mov 8 test
+mov 1024 step
+
+mov 0 result
+
+:main
+#10
+add one d10 d10
+
+div d10 ten add
+mod d10 ten d10
+
+#9
+add add d9 d9
+div d9 ten add
+mod d9 ten d9
+
+#8
+add add d8 d8
+div d8 ten add
+mod d8 ten d8
+
+#7
+add add d7 d7
+
+div d7 ten add
+mod d7 ten d7
+
+#6
+add add d6 d6
+
+div d6 ten add
+mod d6 ten d6
+
+#5
+add add d5 d5
+
+div d5 ten add
+mod d5 ten d5
+
+#4
+add add d4 d4
+
+div d4 ten add
+mod d4 ten d4
+
+#3
+add add d3 d3
+
+div d3 ten add
+mod d3 ten d3
+
+#2
+add add d2 d2
+
+div d2 ten add
+mod d2 ten d2
+
+#1
+add add d1 d1
+
+div d1 ten add
+mod d1 ten d1
+
+add one counter counter
+
+mov 0 result
+add d10 result result
+add d9 result result
+add d8 result result
+add d7 result result
+add d6 result result
+add d5 result result
+add d4 result result
+add d3 result result
+add d2 result result
+add d1 result result
+
+sub result test result
+mod result ten result
+
+gotoeq result zero foundWay
+goto noWay
+
+:foundWay
+add one wayCount wayCount
+mod wayCount step showCounter
+gotoeq showCounter one displayCounter
+goto afterCounter
+
+:displayCounter
+print wayFound
+print wayCount
+
+print totalRuns
+print counter
+
+print d10
+print d9
+print d8
+print d7
+print d6
+print d5
+print d4
+print d3
+print d2
+print d1
+
+:afterCounter
+
+:noWay
+
+gotoeq d1 ten done
+goto main
+
+:done
+print ways
+print wayCount

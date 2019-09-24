@@ -1,0 +1,29 @@
+mov 0 x
+mov 0 y
+mov 0 mouse_pos
+
+mov : split_char
+
+mov ( start_paren
+mov , comma
+mov ) end_paren
+mov test show
+
+delay 2000
+
+call mouse_pos togglewriteresult
+
+:start
+call mouse_pos cursorpos
+split mouse_pos split_char x y
+
+add start_paren x show
+add show comma show
+add show y show
+add show end_paren show
+
+print show
+
+delay 1000
+
+goto start

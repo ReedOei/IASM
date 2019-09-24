@@ -1,0 +1,11 @@
+mov 1 x
+mov 2 y
+mov 100 test1
+mov 200 test2
+mov 300 test3
+eq x y test1
+lt x y test2
+gt x y test3
+print test1
+print test2
+print test3

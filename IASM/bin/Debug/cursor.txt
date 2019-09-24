@@ -1,0 +1,11 @@
+mov 0 x
+delay 2000
+call x cursorpos
+
+mov 0 cursorx
+mov 0 cursory
+mov : splitchar
+
+split x splitchar cursorx cursory
+print cursorx
+print cursory

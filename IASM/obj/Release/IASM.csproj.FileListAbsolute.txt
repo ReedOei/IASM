@@ -1,0 +1,6 @@
+C:\Users\Reed\Google Drive\Programming\C#\IASM\IASM\bin\Release\IASM.pdb
+C:\Users\Reed\Google Drive\Programming\C#\IASM\IASM\obj\Release\IASM.pdb
+C:\Users\Reed\Google Drive\Programming\C#\IASM\IASM\obj\Release\IASM.csprojResolveAssemblyReference.cache
+C:\Users\Reed\Google Drive\Programming\C#\IASM\IASM\bin\Release\IASM.dll.config
+C:\Users\Reed\Google Drive\Programming\C#\IASM\IASM\bin\Release\IASM.dll
+C:\Users\Reed\Google Drive\Programming\C#\IASM\IASM\obj\Release\IASM.dll

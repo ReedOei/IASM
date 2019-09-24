@@ -1,0 +1,34 @@
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/IASM.exe.config
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/IASM.exe
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/IASM.pdb
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/obj/Debug/IASM.csprojResolveAssemblyReference.cache
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/obj/Debug/IASM.exe
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/obj/Debug/IASM.pdb
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/ImageRecognition.dll
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/Scripting.dll
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/IASM.dll
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/ImageRecognition.pdb
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/Scripting.pdb
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/Selenium.dll
+C:/Users/Reed/Google Drive/Programming/C#/IASM/IASM/bin/Debug/Selenium.pdb
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/ImageRecognition.dll
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/WindowsInput.dll
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/Scripting.dll
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/Selenium.dll
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/IASM.dll
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/ImageRecognition.pdb
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/ImageRecognition.dll.config
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/ImageRecognition.exe.config
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/WindowsInput.xml
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/Scripting.pdb
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/Selenium.pdb
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/IASM.pdb
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/obj/Debug/IASM.csprojResolveAssemblyReference.cache
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/obj/Debug/IASM.csproj.CoreCompileInputs.cache
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/obj/Debug/IASM.pdb
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/bin/Debug/IASM.dll.config
+C:/Users/Reed/Dropbox/Programming/C#/IASM/IASM/obj/Debug/IASM.dll
+/home/roei/IASM/IASM/obj/Debug/IASM.csprojResolveAssemblyReference.cache
+/home/roei/IASM/IASM/obj/Debug/IASM.csproj.CoreCompileInputs.cache
+/home/roei/IASM/IASM/obj/Debug/IASM.dll
+/home/roei/IASM/IASM/obj/Debug/IASM.pdb

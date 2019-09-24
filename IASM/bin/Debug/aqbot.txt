@@ -1,0 +1,180 @@
+:main
+mov 0 InBattle
+mov 0 Attacked
+mov 1 True
+mov 0 False
+
+mov 0 Won
+mov 0 Leveled
+mov 0 Died
+
+mov 0 HybeeScout
+mov 0 TheSeeker
+
+mov 0 StartedBattle
+
+mov 0 x
+
+mov 0 Attacked
+
+:top
+#In case we get stuck
+call x clickarea aqimg/leavetower.png 1700 800 300 300
+delay 750
+
+call StartedBattle clickarea aqimg/battlemonsters.png 1600 650 300 100
+gotoeq StartedBattle True startbattle
+gotoeq InBattle True battle
+
+:startbattle
+mov 1 InBattle
+
+:battle
+delay 14000
+call Attacked clickarea aqimg/aqattack.png 1250 350 250 100
+call InBattle clickarea aqimg/hp.png 1600 700 200 200 
+
+gotoeq Attacked True battle
+
+#Grabbi
+call x clickarea aqimg/grabbi.png 1550 380 300 200
+delay 500
+gotoeq x True nextbuttons
+
+#In case of Moglin Friends
+call x clickarea aqimg/goodbye.png 1580 380 200 200
+delay 500
+gotoeq x True nextbuttons
+
+#In case we get stuck
+call x clickarea aqimg/leavetower.png 1700 800 300 300
+delay 750
+
+#Gnuvain the Changer
+call x clickarea aqimg/gnuvain.png 1350 350 200 200
+delay 500
+gotoeq x True nextbuttons
+
+#Lord Arrgthas
+call x clickarea aqimg/lorda.png 1500 700 200 100
+gotoeq x True nothanksa
+goto afterlorda
+:nothanksa
+call x clickpos 1692 714
+delay 500
+gotoeq x True nextbuttons
+
+:afterlorda
+
+#The Seeker
+call TheSeeker clickarea aqimg/theseeker.png 1480 680 200 200
+gotoeq TheSeeker True seeker
+goto treasurechest
+
+:seeker
+call x clickpos 1801 386
+delay 500
+call x clickpos 1742 389
+goto endbattle
+
+:treasurechest
+#In case of rare treasure chest
+call x clickarea aqimg/open.png 1300 480 200 200
+gotoeq x True donechest
+goto afterchest
+
+:donechest
+delay 2000
+call x clickarea aqimg/done.png 1580 400 200 200
+goto nextbuttons
+
+:afterchest
+
+#O'Meany
+call x clickarea aqimg/fight.png 1380 380 200 200
+call x clickarea aqimg/fight2.png 1380 480 200 200
+delay 500
+gotoeq x True startbattle
+
+#Dark Cave
+call x clickarea aqimg/run.png 1350 480 200 200
+delay 500
+gotoeq x True nextbuttons
+
+#Drakel War party
+call x clickarea aqimg/huh.png 1480 480 200 200
+delay 500
+gotoeq x True nextbuttons
+
+#Animal box
+call x clickarea aqimg/boxno.png 1480 480 200 200
+delay 500
+gototeq x True nextbuttons
+
+#In case of Dynablade Drakel
+call x clickarea aqimg/nothanks.PNG 1550 300 200 100
+delay 500
+gotoeq x True nextbuttons
+
+:Hybee
+#In case of Hybee Scout
+call HybeeScout clickarea aqimg/hybeemore.png 1300 480 200 100
+call x clickarea aqimg/random.png 800 700 300 200
+call x clickarea aqimg/random2.png 800 700 300 200
+delay 500
+
+#While we click on the more button, keep going up
+gotoeq HybeeScout True Hybee
+
+call x clickarea aqimg/donttrackhybee.png 1550 350 200 200
+gotoeq x True nextbuttons
+
+#Savvy merchant
+call x clickarea aqimg/merchantmore.png 1380 380 200 200
+delay 1000
+gotoeq x True merchant
+goto nextbuttons
+
+:merchant
+call x clickpos 1581 386
+delay 500
+call x clickpos 1636 520
+delay 500
+call x clickpos 1633 520
+delay 500
+
+:nextbuttons
+delay 1500
+call Leveled clickarea aqimg/levelnext.png 1300 490 200 100
+call Won clickarea aqimg/aqnext.png 1300 600 200 125
+call Died clickarea aqimg/deathnext.png 1200 500 300 100
+
+gotoeq Died True endbattle
+gotoeq Won True endbattle
+gotoeq Leveled True endbattle
+goto restartbattle
+
+:endbattle
+delay 1500
+mov 0 InBattle
+gotoeq Died True Death
+goto Twilly
+
+:restartbattle
+gotoeq InBattle True battle
+
+:Death
+delay 4000
+call x clickarea aqimg/yes.PNG 1200 440 200 100
+call x clickpos 1075 773
+delay 2000
+call x clickarea aqimg/iagree.PNG 1200 440 200 100
+delay 2000
+
+:Twilly
+delay 2000
+call x clickpos 1259 666
+delay 3500
+call x clickarea aqimg/back.png 1650 780 200 100
+delay 750
+goto top

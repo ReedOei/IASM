@@ -1,0 +1,41 @@
+mov 0 start
+mov 0 start_x
+mov 0 start_y
+
+mov 0 end
+mov 0 end_x
+mov 0 end_y
+
+mov 0 width
+mov 0 height
+
+mov Data: show_line
+mov Start: start_text
+mov End: end_text
+
+mov : splitchar
+
+delay 2000
+call start cursorpos
+
+split start splitchar start_x start_y
+
+print start_text
+print start_x
+print start_y
+
+delay 2000
+call end cursorpos
+
+split end splitchar end_x end_y
+
+print end_text
+print end_x
+print end_y
+
+sub end_x start_x width
+sub end_y start_y height
+
+print show_line
+print width
+print height

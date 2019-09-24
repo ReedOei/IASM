@@ -1,0 +1,137 @@
+:start
+mov 0 x
+mov 1 True
+delay 4000
+
+:main
+# (952,560) space station
+call x clickpos 952 560
+delay 1500
+
+# Instance Button 
+call x clickpos 958 619
+# If the space station is being upgraded
+# call x clickpos 962 576
+delay 1500
+
+# instance 1
+# call x clickpos 698 377
+# instance 2
+# call x clickpos 741 413
+# instance 3
+# call x clickpos 690 490
+# instance 4
+# call x clickpos 756 463
+# instance 5
+call x clickpos 816 391
+delay 1500
+
+# (1142,400) increase fleet button
+call x clickpos 1142 400
+delay 1500
+
+# (1032,739) load he3
+call x clickpos 1032 739
+delay 1500
+
+# (797,356) supply all
+call x clickpos 797 356
+delay 1500
+
+# (1153,361) confirm
+call x clickpos 1153 361
+delay 1500
+
+# (1142,400) increase fleet button
+call x clickpos 1142 400
+delay 1500
+
+# (796,446) first fleet
+call x clickpos 796 446
+delay 1500
+
+# (978,443) second fleet
+call x clickpos 978 446
+delay 1500
+
+# (1178,443) third fleet
+call x clickpos 1178 443
+delay 1500
+
+# fourth fleet
+call x clickpos 794 549
+delay 1500
+
+# fifth fleet
+call x clickpos 965 547
+delay 1500
+
+# sixth fleet
+call x clickpos 1154 546
+delay 1500
+
+# (1204,738) okay button
+call x clickpos 1204 738
+delay 1500
+
+# (1146,357) go button
+call x clickpos 1146 357
+delay 1500
+
+:wait
+# Check for end
+call x clickarea go2_img/close.png 950 550 400 300
+delay 10000
+gotoeq x True mail
+goto wait
+
+:mail
+# Open mailbox
+call x clickpos 742 309
+delay 1500
+
+# Open mail
+call x clickpos 913 479
+delay 1500
+
+# Get items
+call x clickpos 1037 737
+delay 1500
+
+# Delete
+call x clickpos 680 739
+delay 1500
+
+# Close mail
+call x clickpos 1266 295
+delay 1500
+
+# open tools
+call x clickpos 1365 852
+delay 1500
+
+# open bag
+call x clickpos 1364 821
+delay 1500
+
+# click on instance box
+# call x clickpos 1086 553
+# call x clickpos 1048 600
+# call x clickpos 1183 551
+delay 1500
+
+# Click use
+# call x clickpos 1147 577
+# call x clickpos 1094 624
+call x clickpos 1248 574
+delay 1500
+
+# Go back to bag
+call x clickpos 951 679
+delay 1500
+
+# close bag
+call x clickpos 1198 397
+delay 1500
+
+goto main

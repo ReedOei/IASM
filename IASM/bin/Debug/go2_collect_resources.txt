@@ -1,0 +1,25 @@
+:start
+
+mov 0 x
+mov 0 y
+
+delay 2000
+
+:main
+
+:enter_coordinates
+# Location coordinates button
+call x clickpos 1098 810
+delay 1500
+
+# x coordinate box
+call x clickpos 772 431
+delay 1500
+call x type 100 123
+delay 1500
+
+# y coordinate box
+# call x clickpos 820 427
+# delay 1500
+# call x type 100 456
+# delay 1500

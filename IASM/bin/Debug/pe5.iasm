@@ -1,0 +1,63 @@
+mov 0 a
+mov 0 b
+mov 0 d
+mov 0 gcf
+mov 0 lcm
+
+mov 20 limit
+mov 1 current
+mov 1 currentlcm
+mov 1 One
+
+mov Done done
+mov D: Dprint
+mov LCM: LCMprint
+mov GCF: GCFprint
+
+goto program
+
+:lcm
+mov 0 d
+mult a b d
+
+#Find the gcf
+:gcf
+mov 0 gcf
+mov 0 Zero
+
+gotoeq b Zero donegcf
+
+mov a temp
+mov b a
+
+mod temp b b
+goto gcf
+
+:donegcf
+mov a gcf
+
+#the lcm is a*b/gcf
+div d gcf lcm
+print LCMprint
+print lcm
+
+goto donelcm
+
+:program
+print currentlcm
+gotoeq current limit done
+
+mov current a
+mov currentlcm b
+
+goto lcm
+
+:donelcm
+mov lcm currentlcm
+add One current current
+
+goto program
+
+:done
+print done
+print currentlcm

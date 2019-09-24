@@ -1,0 +1,10 @@
+mov 0 x
+delay 4000
+
+:top
+call x clickpos 1172 537
+delay 6000
+call x clickpos 733 519
+delay 6000
+
+goto top
