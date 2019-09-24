@@ -29,40 +29,35 @@ namespace IASM
 
     public class Compiler
     {
-        public static List<long> Compile(string Input) //Run a file
+        // The list of differently named memory locations. These will be converted to indices in the generated code.
+        private List<CompileVariable> Memory = new List<CompileVariable>();
+        private List<string> InputLines = new List<string>();
+
+        public Compiler(List<string> InputLines)
         {
-            return Compile(System.IO.File.ReadAllLines(Input).ToList());
+            this.InputLines = InputLines;
         }
 
-        public static bool MemoryContains(List<CompileVariable> Memory, string VarName)
-        {       
-            foreach (CompileVariable Check in Memory)
-            {
-                if (Check.Name.Equals(VarName))
-                    return true;
-            }
-
-            return false;
+        public bool MemoryContains(string VarName)
+        {
+            return Memory.FindIndex(N => N.Name.Equals(VarName)) >= 0;
         }
 
-        public static string CheckForIndex(List<CompileVariable> Memory, string Name, int Line, ref bool Error, bool IgnoreError=false)
+        public string FindMemoryIndex(string Name, int Line, ref bool Error)
         {
             int Index = Memory.FindIndex(N => N.Name.Equals(Name));
 
             if (Index == -1)
             {
                 Error = true;
-
-                if (!IgnoreError)
-                    Console.WriteLine("Variable \"{0}\" not declared.", Name, Line);
+                Console.WriteLine("Variable \"{0}\" not declared.", Name, Line);
             }
 
             return Index.ToString();
         }
 
-        public static List<long> Compile(List<string> Input)
+        public List<long> Compile()
         {
-            List<CompileVariable> Memory = new List<CompileVariable>(); //The list of differently named memory locations. These will be converted to indices
             List<string> Points = new List<string>(); //A list of goto locations.
             List<int> PointLocation = new List<int>(); //The position of a given location in the Result.
 
@@ -70,11 +65,13 @@ namespace IASM
 
             bool Error = false;
 
-            for (int x = 0; x < Input.Count(); x++)
+            for (int x = 0; x < InputLines.Count(); x++)
             {
-                string Line = Input[x];
+                string Line = InputLines[x];
                 if (String.IsNullOrWhiteSpace(Line))
+                {
                     continue;
+                }
 
                 string[] Params = Line.Split(' ');
 
@@ -89,7 +86,7 @@ namespace IASM
                     {
                         Result.Add(((int)Commands.IF).ToString());
 
-                        Result.Add(CheckForIndex(Memory, Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
                         Result.Add(Params[2]);
                         Result.Add(Params[3]);
                     }
@@ -97,16 +94,16 @@ namespace IASM
                     {
                         Result.Add(((int)Commands.LENGTH).ToString());
 
-                        Result.Add(CheckForIndex(Memory, Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
                     }
                     else if (Params[0].ToLower().Equals("split"))
                     {
                         Result.Add(((int)Commands.SPLIT).ToString());
-                        
-                        Result.Add(CheckForIndex(Memory, Params[1], x, ref Error));
-                        Result.Add(CheckForIndex(Memory, Params[2], x, ref Error));
-                        Result.Add(CheckForIndex(Memory, Params[3], x, ref Error));
-                        Result.Add(CheckForIndex(Memory, Params[4], x, ref Error));
+
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[2], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[3], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[4], x, ref Error));
                     }
                     else if (Params[0].ToLower().Equals("mov"))
                     {
@@ -114,14 +111,14 @@ namespace IASM
 
                         Result.Add(((int)Commands.MOV).ToString());
 
-                        if (MemoryContains(Memory, Params[1]))
+                        if (MemoryContains(Params[1]))
                         {
                             Result.Add("0"); //A variable
 
                             Type = Memory.Find(N => N.Name.Equals(Params[1])).Type;
 
                             Result.Add(Type.ToString());
-                            Result.Add(CheckForIndex(Memory, Params[1], x, ref Error));
+                            Result.Add(FindMemoryIndex(Params[1], x, ref Error));
                         }
                         else
                         {
@@ -161,10 +158,10 @@ namespace IASM
                             }
                         }
 
-                        if (!MemoryContains(Memory, Params[2]))
+                        if (!MemoryContains(Params[2]))
                             Memory.Add(new CompileVariable(Type, Params[2], ""));
 
-                        Result.Add(CheckForIndex(Memory, Params[2], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[2], x, ref Error));
                     }
                     else if (Params[0].ToLower().Equals("add") || Params[0].ToLower().Equals("sub") ||
                              Params[0].ToLower().Equals("mult") || Params[0].ToLower().Equals("div") ||
@@ -193,30 +190,30 @@ namespace IASM
                         else if (Params[0].ToLower().Equals("le"))
                             Result.Add(((int)Commands.LE).ToString());
 
-                        Result.Add(CheckForIndex(Memory, Params[1], x, ref Error));
-                        Result.Add(CheckForIndex(Memory, Params[2], x, ref Error));
-                        Result.Add(CheckForIndex(Memory, Params[3], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[2], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[3], x, ref Error));
                     }
                     else if (Params[0].ToLower().Equals("print"))
                     {
                         Result.Add(((int)Commands.PRINT).ToString());
 
-                        Result.Add(CheckForIndex(Memory, Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
                     }
                     else if (Params[0].ToLower().Equals("gotoeq"))
                     {
                         Result.Add(((int)Commands.GOTOEQ).ToString());
 
-                        Result.Add(CheckForIndex(Memory, Params[1], x, ref Error));
-                        Result.Add(CheckForIndex(Memory, Params[2], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[2], x, ref Error));
                         Result.Add(Params[3]);
                     }
                     else if (Params[0].ToLower().Equals("gotogr"))
                     {
                         Result.Add(((int)Commands.GOTOGR).ToString());
 
-                        Result.Add(CheckForIndex(Memory, Params[1], x, ref Error));
-                        Result.Add(CheckForIndex(Memory, Params[2], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[2], x, ref Error));
                         Result.Add(Params[3]);
                     }
                     else if (Params[0].ToLower().Equals("goto"))
@@ -229,19 +226,23 @@ namespace IASM
                     {
                         Result.Add(((int)Commands.CALL).ToString());
 
-                        Result.Add(CheckForIndex(Memory, Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
 
                         int LengthSpot = Result.Count();
                         int Len = 0;
 
                         for (int i = 2; i < Params.Count(); i++)
                         {
-                            string Index = CheckForIndex(Memory, Params[i], x, ref Error, IgnoreError: true);
-                            
-                            if (Error)
+                            if (MemoryContains(Params[i]))
                             {
-                                Error = false; //These errors aren't actual errors, just testing and for diagnosis for the code writer.
-
+                                string Index = FindMemoryIndex(Params[i], x, ref Error);
+                                Result.Add("-1");
+                                Len++;
+                                Result.Add(Index);
+                                Len++;
+                            }
+                            else
+                            {
                                 foreach (char Add in Params[i])
                                 {
                                     Result.Add(Convert.ToInt64(Add).ToString());
@@ -249,13 +250,6 @@ namespace IASM
                                 }
 
                                 Result.Add(Convert.ToInt64(' ').ToString());
-                                Len++;
-                            }
-                            else
-                            {
-                                Result.Add("-1");
-                                Len++;
-                                Result.Add(Index);
                                 Len++;
                             }
                         }
@@ -278,7 +272,9 @@ namespace IASM
                 if (Result[i].Length < 10)
                 {
                     if (!int.TryParse(Result[i], out Test)) //It must be a goto location
+                    {
                         Result[i] = PointLocation[Points.FindIndex(N => N.Equals(Result[i]))].ToString();
+                    }
                 }
                 else if (Result[i].Length >= 10)
                 {
@@ -286,16 +282,15 @@ namespace IASM
                 }
             }
 
-            Console.WriteLine(String.Join(" ", Result));
-
             if (Error)
             {
-                Console.ReadLine();
-
-                System.Threading.Thread.CurrentThread.Abort();
+                return null;
             }
-
-            return Result.Select(N => Convert.ToInt64(N)).ToList();
+            else
+            {
+                return Result.Select(N => Convert.ToInt64(N)).ToList();
+            }
         }
     }
 }
+

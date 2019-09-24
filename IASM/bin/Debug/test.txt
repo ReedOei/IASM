@@ -1,5 +1,1 @@
-mov 800 x
-mov 400 y
-mov 0 i
-
-call i clickpos x y
+call x clickpos 100 20

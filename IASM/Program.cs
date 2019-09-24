@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using WindowsInput.Native;
 using WindowsInput;
 using System.Threading;
-using System.Runtime.InteropServices
+using System.Runtime.InteropServices;
 
 namespace IASM
 {
@@ -16,7 +17,7 @@ namespace IASM
         {
             List<long> Applied = Commands.Skip(i + 3).ToList();
             Applied = Applied.Take((int)Commands[i + 2]).ToList();
-            
+
             for (int k = 0; k < Applied.Count(); k++)
             {
                 if (Applied[k] == -1)
@@ -142,25 +143,44 @@ namespace IASM
 
             Runtime.External = External;
 
-            if (args.Length > 0)
+            if (args.Length > 1)
             {
-                if (args[0].Contains('.'))
-                    args = System.IO.File.ReadAllLines(args[0]);
-
-                Run.Run(Compiler.Compile(args.ToList()));
+                if (args[0] == "compile")
+                {
+                    var CompiledCode = new Compiler(File.ReadAllLines(args[1]).ToList()).Compile();
+                    if (CompiledCode != null)
+                    {
+                        if (args.Length > 2) // Save to a file
+                        {
+                            File.WriteAllText(args[2], string.Join(" ", CompiledCode.Select(X => X.ToString())));
+                        }
+                        else // Print to screen
+                        {
+                            Console.WriteLine(string.Join(" ", CompiledCode.Select(X => X.ToString())));
+                        }
+                    }
+                }
+                else if (args[0] == "run")
+                {
+                    var CompiledCode = File.ReadAllText(args[1]).Split(' ').Select(X => Convert.ToInt64(X)).ToList();
+                    Run.Run(CompiledCode);
+                }
+                else
+                {
+                    ShowUsage();
+                }
             }
             else
             {
-                string FileName = Console.ReadLine();
-                
-                args = System.IO.File.ReadAllLines(FileName);
-
-                Run.Run(Compiler.Compile(args.ToList()));
+                ShowUsage();
             }
+        }
 
-            Console.WriteLine(Run.Dump());
-
-            Console.ReadLine();
+        static void ShowUsage()
+        {
+            Console.WriteLine("Usage: IASM command FILE");
+            Console.WriteLine("  command - May be 'compile' or 'run'");
         }
     }
 }
+
