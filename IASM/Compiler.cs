@@ -108,6 +108,7 @@ namespace IASM
                         Result.Add(((int)Commands.LENGTH).ToString());
 
                         Result.Add(FindMemoryIndex(Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[2], x, ref Error));
                     }
                     else if (Params[0].ToLower().Equals("split"))
                     {
@@ -290,6 +291,10 @@ namespace IASM
                     {
                         Result.Add(((int)Commands.GOTOVAR).ToString());
                         Result.Add(FindMemoryIndex(Params[1], x, ref Error));
+                    }
+                    else if (Params[0].Equals("#"))
+                    {
+                        // Ignore comments
                     }
                     else
                     {

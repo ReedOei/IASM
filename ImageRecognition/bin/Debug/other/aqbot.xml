@@ -1,0 +1,14 @@
+﻿<Scope Name="loop">
+  <call>clickon battlemonsters.png</call>
+  <call>clickon aqattack.png</call>
+  <call>clickon aqattack.png</call>
+  <call>clickon aqattack.png</call>
+  <call>clickon aqattack.png</call>
+  <call>clickon aqnext.png</call>
+  <call>clickon twilly.png</call>
+  <loop/>
+  <run/>
+</Scope>
+
+<loop/>
+<run/>

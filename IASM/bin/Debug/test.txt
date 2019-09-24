@@ -1,1 +1,11 @@
-call x clickpos 100 20
+mov 0 x
+
+call x clickpos 1058 540 
+delay 2000
+call x clickpos 1058 545
+delay 2000
+call x clickpos 1058 546 
+delay 2000
+call x clickpos 1058 548 
+delay 2000
+

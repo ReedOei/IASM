@@ -1,0 +1,58 @@
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.exe.config
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.exe
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.pdb
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csprojResolveAssemblyReference.cache
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.Properties.Resources.resources
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csproj.GenerateResource.Cache
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.exe
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.pdb
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.dll
+C:\Users\Reed\Google Drive\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.pdb
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.pdb
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csprojResolveAssemblyReference.cache
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.Properties.Resources.resources
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csproj.GenerateResource.Cache
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.pdb
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.dll
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\IASM.dll
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.pdb
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Selenium.pdb
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\IASM.pdb
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Selenium.dll
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.exe.config
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.exe
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.exe
+C:\Users\Reed\Google Drive\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.dll.config
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.Properties.Resources.resources
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csproj.GenerateResource.Cache
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csproj.CoreCompileInputs.cache
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.pdb
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.pdb
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.dll
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Selenium.dll
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\IASM.dll
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.pdb
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.dll.config
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\Selenium.pdb
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\IASM.pdb
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.dll.config
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.dll
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.dll
+C:\Users\Reed\Dropbox\Programming\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csprojResolveAssemblyReference.cache
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.dll.config
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.dll
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\ImageRecognition.pdb
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.dll
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\Selenium.dll
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\IASM.dll
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.pdb
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\Scripting.dll.config
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\Selenium.pdb
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\bin\Debug\IASM.pdb
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csprojAssemblyReference.cache
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.Properties.Resources.resources
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csproj.GenerateResource.cache
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csproj.CoreCompileInputs.cache
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.csproj.CopyComplete
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.dll
+C:\Users\Reed\Source\Repos\ProgrammingArchive\C#\ImageRecognition\ImageRecognition\obj\Debug\ImageRecognition.pdb

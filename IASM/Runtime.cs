@@ -371,10 +371,7 @@ namespace IASM
 
         public int LENGTH(int i)
         {
-            if ((Memory[(int)Code[i + 1]].Type == (int)VarTypes.INTEGER) || (Memory[(int)Code[i + 1]].Type == (int)VarTypes.DECIMAL))
-                Memory[(int)Code[i + 2]].Value = "1";
-            else
-                Memory[(int)Code[i + 2]].Value = Memory[(int)Code[i + 1]].Value.Count().ToString();
+            Memory[(int)Code[i + 2]].Value = Memory[(int)Code[i + 1]].Value.Count().ToString();
 
             return i + 3;
         }

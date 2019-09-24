@@ -1,0 +1,8 @@
+﻿<doc>
+  <Scope Name="loop">
+    <call>clickon close.png</call>
+    <loop/><run/>
+  </Scope>
+
+  <loop/><run/>
+</doc>

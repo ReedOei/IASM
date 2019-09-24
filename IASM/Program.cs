@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq;
-using WindowsInput.Native;
-using WindowsInput;
 using System.Threading;
-using System.Runtime.InteropServices;
+using WindowsInput;
+using WindowsInput.Native;
 
 namespace IASM
 {
@@ -64,10 +61,9 @@ namespace IASM
             }
             else if (CommandName.Equals("type"))
             {
-                for (int i = 1; i < CommandArgs.Count(); i++)
-                {
-                    Type(Convert.ToInt32(CommandArgs[0]), CommandArgs[i]);
-                }
+                var TypeString = string.Join(" ", CommandArgs.Skip(1));
+                Console.WriteLine(TypeString);
+                Type(Convert.ToInt32(CommandArgs[0]), TypeString);
 
                 return Params;
             }
@@ -87,6 +83,10 @@ namespace IASM
                 {
                     Result[kc.ToString().Substring(3)] = kc;
                 }
+                else if (kc == VirtualKeyCode.SPACE)
+                {
+                    Result[" "] = kc;
+                }
                 else
                 {
                     Result[kc.ToString()] = kc;
@@ -104,6 +104,7 @@ namespace IASM
 
             while (Str.Length > 0)
             {
+                // We do it this way so that users can type things other than single keys
                 var KeyCode = Keycodes().First(kc => Str.StartsWith(kc.Key));
                 PressKey(KeyCode.Value.ToString());
 
@@ -167,6 +168,19 @@ namespace IASM
                     var CompiledCode = File.ReadAllText(args[1]).Split(' ').Select(X => Convert.ToInt64(X)).ToList();
                     new Runtime(args.ToList().Skip(1).ToList(), CompiledCode, new External()).Run();
                 }
+                else if (args[0] == "interpret")
+                {
+                    var CompiledCode = new Compiler(File.ReadAllLines(args[1]).ToList()).Compile();
+                    if (CompiledCode != null)
+                    {
+                        new Runtime(args.ToList().Skip(1).ToList(), CompiledCode, new External()).Run();
+
+                    }
+                    else
+                    {
+                        return 1;
+                    }
+                }
                 else
                 {
                     ShowUsage();
@@ -185,7 +199,7 @@ namespace IASM
         public static void ShowUsage()
         {
             Console.WriteLine("Usage: IASM command FILE");
-            Console.WriteLine("  command - May be 'compile' or 'run'");
+            Console.WriteLine("  command - May be 'compile', 'run', or 'interpret' (compile and then run)");
         }
     }
 }
