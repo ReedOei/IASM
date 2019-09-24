@@ -45,12 +45,17 @@ namespace IASM
 
         public string FindMemoryIndex(string Name, int Line, ref bool Error)
         {
+            if (Name.StartsWith(":"))
+            {
+                return Name.Substring(1); // Return the raw label name. This will be converted into a number at the end of the compilation phase.
+            }
+
             int Index = Memory.FindIndex(N => N.Name.Equals(Name));
 
             if (Index == -1)
             {
                 Error = true;
-                Console.WriteLine("Variable \"{0}\" not declared.", Name, Line);
+                Console.Error.WriteLine("Variable \"{0}\" not declared.", Name, Line);
             }
 
             return Index.ToString();
@@ -77,10 +82,18 @@ namespace IASM
 
                 if ((Params.Length > 0) && (Params[0].Length > 0))
                 {
-                    if (Params[0][0] == ':')
+                    if (Params[0].StartsWith(":"))
                     {
-                        Points.Add(Params[0].Substring(1));
-                        PointLocation.Add(Result.Count);
+                        if (Params[0].Substring(1).Equals("here"))
+                        {
+                            Console.Error.WriteLine("Labels cannot be named 'here'!");
+                            Error = true;
+                        }
+                        else
+                        {
+                            Points.Add(Params[0].Substring(1));
+                            PointLocation.Add(Result.Count);
+                        }
                     }
                     else if (Params[0].ToLower().Equals("if"))
                     {
@@ -119,6 +132,12 @@ namespace IASM
 
                             Result.Add(Type.ToString());
                             Result.Add(FindMemoryIndex(Params[1], x, ref Error));
+                        }
+                        else if (Params[1].StartsWith(":"))
+                        {
+                            Result.Add("1"); // A constant
+                            Result.Add(((int)VarTypes.INTEGER).ToString());
+                            Result.Add(Params[1].Substring(1));
                         }
                         else
                         {
@@ -219,7 +238,6 @@ namespace IASM
                     else if (Params[0].ToLower().Equals("goto"))
                     {
                         Result.Add(((int)Commands.GOTO).ToString());
-
                         Result.Add(Params[1]);
                     }
                     else if (Params[0].ToLower().Equals("call"))
@@ -262,21 +280,29 @@ namespace IASM
 
                         Result.Add(Params[1]);
                     }
+                    else if (Params[0].ToLower().Equals("arg"))
+                    {
+                        Result.Add(((int)Commands.ARG).ToString());
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
+                        Result.Add(FindMemoryIndex(Params[2], x, ref Error));
+                    }
+                    else if (Params[0].ToLower().Equals("gotovar"))
+                    {
+                        Result.Add(((int)Commands.GOTOVAR).ToString());
+                        Result.Add(FindMemoryIndex(Params[1], x, ref Error));
+                    }
+                    else
+                    {
+                        Error = true;
+                        Console.Error.WriteLine("Cannot interpret line: " + Line);
+                    }
                 }
             }
 
             for (int i = 0; i < Result.Count; i++)
             {
                 int Test = 0;
-
-                if (Result[i].Length < 10)
-                {
-                    if (!int.TryParse(Result[i], out Test)) //It must be a goto location
-                    {
-                        Result[i] = PointLocation[Points.FindIndex(N => N.Equals(Result[i]))].ToString();
-                    }
-                }
-                else if (Result[i].Length >= 10)
+                if (!int.TryParse(Result[i], out Test)) //It must be a goto location
                 {
                     Result[i] = PointLocation[Points.FindIndex(N => N.Equals(Result[i]))].ToString();
                 }

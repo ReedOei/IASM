@@ -11,9 +11,9 @@ using System.Runtime.InteropServices;
 
 namespace IASM
 {
-    public class Program
+    public class External
     {
-        public static int External(int i, ref List<Variable> Memory, List<long> Commands)
+        public static int Run(int i, ref List<Variable> Memory, List<long> Commands)
         {
             List<long> Applied = Commands.Skip(i + 3).ToList();
             Applied = Applied.Take((int)Commands[i + 2]).ToList();
@@ -135,14 +135,12 @@ namespace IASM
             return false;
         }
 
-        static void Main(string[] args)
+    }
+
+    public class Program
+    {
+        public static int Main(string[] args)
         {
-            Runtime.Init();
-
-            Runtime Run = new Runtime();
-
-            Runtime.External = External;
-
             if (args.Length > 1)
             {
                 if (args[0] == "compile")
@@ -159,24 +157,32 @@ namespace IASM
                             Console.WriteLine(string.Join(" ", CompiledCode.Select(X => X.ToString())));
                         }
                     }
+                    else
+                    {
+                        return 1;
+                    }
                 }
                 else if (args[0] == "run")
                 {
                     var CompiledCode = File.ReadAllText(args[1]).Split(' ').Select(X => Convert.ToInt64(X)).ToList();
-                    Run.Run(CompiledCode);
+                    new Runtime(args.ToList().Skip(1).ToList(), CompiledCode, new External()).Run();
                 }
                 else
                 {
                     ShowUsage();
+                    return 1;
                 }
             }
             else
             {
                 ShowUsage();
+                return 1;
             }
+
+            return 0;
         }
 
-        static void ShowUsage()
+        public static void ShowUsage()
         {
             Console.WriteLine("Usage: IASM command FILE");
             Console.WriteLine("  command - May be 'compile' or 'run'");

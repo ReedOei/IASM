@@ -27,7 +27,9 @@ namespace IASM
         GT,
         LT,
         GE,
-        LE
+        LE,
+        ARG,
+        GOTOVAR
     }
 
     public class Variable
@@ -43,6 +45,21 @@ namespace IASM
             this.Value = Value;
         }
 
+        public int IntValue()
+        {
+            return Convert.ToInt32(Value);
+        }
+
+        public string StringValue()
+        {
+            return Value;
+        }
+
+        public double DoubleValue()
+        {
+            return Convert.ToDouble(Value);
+        }
+
         public override string ToString()
         {
             return Value;
@@ -51,46 +68,46 @@ namespace IASM
 
     public class Runtime
     {
-        public delegate int Command(int i, ref List<Variable> Memory, List<long> Commands);
+        public delegate int Command(int i);
 
-        public static Command External;
-
-        public static List<Command> Commands;
+        public External External;
+        public List<Command> Commands;
 
         public List<Variable> Memory = new List<Variable>();
 
-        public Runtime()
+        private List<string> Args;
+        private List<long> Code;
+
+        public Runtime(List<string> args, List<long> Code, External External)
         {
+            this.Args = args;
+            this.Code = Code;
+            this.External = External;
 
-        }
+            Commands = new List<Command>();
 
-        public static void Init()
-        {
-            if (Commands == null)
-            {
-                Commands = new List<Command>();
-
-                Commands.Add(MOV);
-                Commands.Add(ADD);
-                Commands.Add(SUB);
-                Commands.Add(MULT);
-                Commands.Add(DIV);
-                Commands.Add(MOD);
-                Commands.Add(PRINT);
-                Commands.Add(GOTOEQ);
-                Commands.Add(GOTOGR);
-                Commands.Add(GOTO);
-                Commands.Add(CALL);
-                Commands.Add(DELAY);
-                Commands.Add(SPLIT);
-                Commands.Add(IF);
-                Commands.Add(LENGTH);
-                Commands.Add(EQ);
-                Commands.Add(GT);
-                Commands.Add(LT);
-                Commands.Add(GE);
-                Commands.Add(LE);
-            }
+            Commands.Add(MOV);
+            Commands.Add(ADD);
+            Commands.Add(SUB);
+            Commands.Add(MULT);
+            Commands.Add(DIV);
+            Commands.Add(MOD);
+            Commands.Add(PRINT);
+            Commands.Add(GOTOEQ);
+            Commands.Add(GOTOGR);
+            Commands.Add(GOTO);
+            Commands.Add(CALL);
+            Commands.Add(DELAY);
+            Commands.Add(SPLIT);
+            Commands.Add(IF);
+            Commands.Add(LENGTH);
+            Commands.Add(EQ);
+            Commands.Add(GT);
+            Commands.Add(LT);
+            Commands.Add(GE);
+            Commands.Add(LE);
+            Commands.Add(ARG);
+            Commands.Add(GOTOVAR);
         }
 
         public string Dump()
@@ -105,33 +122,71 @@ namespace IASM
             return Result;
         }
 
-        public string Run(List<long> Code)
+        public string Run()
         {
-            if (Code.Count <= 0) return "";
+            if (Code.Count <= 0)
+            {
+                return "";
+            }
 
             for (int i = 0; i < Code.Count; i++)
             {
-                i = Commands[(int)Code[i]](i, ref Memory, Code) - 1;
+                i = Commands[(int)Code[i]](i) - 1;
             }
 
             return String.Join(" ", Code);
         }
 
-        public static int PRINT(int i, ref List<Variable> Memory, List<long> Commands)
+        public Variable GetMemory(long i)
         {
-            long M1 = Commands[i + 1];
+            return Memory[(int)i];
+        }
 
-            Console.WriteLine(Memory[(int)M1]);
+        public void SetMemory(long i, string val)
+        {
+            GetMemory(i).Value = val;
+        }
+
+        public int GOTOVAR(int i)
+        {
+            long M1 = Code[i + 1];
+            return GetMemory(M1).IntValue();
+        }
+
+        public int ARG(int i)
+        {
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+
+            int ArgIndex = GetMemory(M1).IntValue();
+
+            if (ArgIndex < Args.Count())
+            {
+                SetMemory(M2, Args[GetMemory(M1).IntValue()]);
+            }
+            else
+            {
+                SetMemory(M2, "");
+            }
+
+            return i + 3;
+        }
+
+        public int PRINT(int i)
+        {
+            long M1 = Code[i + 1];
+
+            Console.WriteLine(GetMemory(M1).StringValue());
 
             return i + 2;
         }
 
-        public static int MOV(int i, ref List<Variable> Memory, List<long> Commands)
+        public int MOV(int i)
         {
-            long IsVar = Commands[i + 1];
-            int Type = (int)Commands[i + 2];
+            long IsVar = Code[i + 1];
+            int Type = (int)Code[i + 2];
 
-            long Data = Commands[i + 3];
+            long Data = Code[i + 3];
 
             string M1 = "";
 
@@ -140,26 +195,26 @@ namespace IASM
             {
                 if (Type == (int)VarTypes.STRING)
                 {
-                    Length = (int)Commands[i + 3];
+                    Length = (int)Code[i + 3];
 
                     for (int x = i + 4; x < (i + 4 + Length); x++)
                     {
-                        M1 += Convert.ToChar(Commands[x]);
+                        M1 += Convert.ToChar(Code[x]);
                     }
                 }
                 else if (Type == (int)VarTypes.DECIMAL)
                 {
                     Length = 1;
 
-                    M1 = Convert.ToDouble(Commands[i + 3]) + Convert.ToDouble("0." + Commands[i + 4].ToString()).ToString();
+                    M1 = Convert.ToDouble(Code[i + 3]) + Convert.ToDouble("0." + Code[i + 4].ToString()).ToString();
                 }
                 else
-                    M1 = Commands[i + 3].ToString();
+                    M1 = Code[i + 3].ToString();
             }
             else
                 M1 = Memory[(int)Data].Value;
 
-            long M2 = Commands[i + 4 + Length];
+            long M2 = Code[i + 4 + Length];
 
             if (M2 >= Memory.Count)
                 Memory.Add(new Variable(Type, ""));
@@ -169,11 +224,11 @@ namespace IASM
             return i + 5 + Length;
         }
 
-        public static int ADD(int i, ref List<Variable> Memory, List<long> Commands)
+        public int ADD(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
                 Memory[(int)M3].Value = (Convert.ToInt32(Memory[(int)M1].Value) + Convert.ToInt32(Memory[(int)M2].Value)).ToString();
@@ -185,11 +240,11 @@ namespace IASM
             return i + 4;
         }
 
-        public static int SUB(int i, ref List<Variable> Memory, List<long> Commands)
+        public int SUB(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
                 Memory[(int)M3].Value = (Convert.ToInt32(Memory[(int)M1].Value) - Convert.ToInt32(Memory[(int)M2].Value)).ToString();
@@ -199,11 +254,11 @@ namespace IASM
             return i + 4;
         }
 
-        public static int MULT(int i, ref List<Variable> Memory, List<long> Commands)
+        public int MULT(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
                 Memory[(int)M3].Value = (Convert.ToInt32(Memory[(int)M1].Value) * Convert.ToInt32(Memory[(int)M2].Value)).ToString();
@@ -213,11 +268,11 @@ namespace IASM
             return i + 4;
         }
 
-        public static int DIV(int i, ref List<Variable> Memory, List<long> Commands)
+        public int DIV(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Convert.ToDouble(Memory[(int)M2].Value) == 0)
             {
@@ -232,22 +287,22 @@ namespace IASM
             return i + 4;
         }
 
-        public static int MOD(int i, ref List<Variable> Memory, List<long> Commands)
+        public int MOD(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             Memory[(int)M3].Value = (Convert.ToInt32(Memory[(int)M1].Value) % Convert.ToInt32(Memory[(int)M2].Value)).ToString();
 
             return i + 4;
         }
 
-        public static int GOTOEQ(int i, ref List<Variable> Memory, List<long> Commands)
+        public int GOTOEQ(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Value.Equals(Memory[(int)M2].Value))
                 return (int)M3;
@@ -255,11 +310,11 @@ namespace IASM
             return i + 4;
         }
 
-        public static int GOTOGR(int i, ref List<Variable> Memory, List<long> Commands)
+        public int GOTOGR(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
             {
@@ -279,56 +334,56 @@ namespace IASM
             return i + 4;
         }
 
-        public static int GOTO(int i, ref List<Variable> Memory, List<long> Commands)
+        public int GOTO(int i)
         {
-            long M1 = Commands[i + 1];
+            long M1 = Code[i + 1];
 
             return (int)M1;
         }
 
-        public static int CALL(int i, ref List<Variable> Memory, List<long> Commands)
+        public int CALL(int i)
         {
-            return External(i, ref Memory, Commands);
+            return External.Run(i, ref Memory, Code);
         }
 
-        public static int DELAY(int i, ref List<Variable> Memory, List<long> Commands)
+        public int DELAY(int i)
         {
             System.Threading.ManualResetEvent Waiter = new System.Threading.ManualResetEvent(false);
 
-            Waiter.WaitOne((int)Commands[i + 1]);
+            Waiter.WaitOne((int)Code[i + 1]);
 
             return i + 2;
         }
 
-        public static int SPLIT(int i, ref List<Variable> Memory, List<long> Commands)
+        public int SPLIT(int i)
         {
-            string Val = Memory[(int)Commands[i + 1]].Value;
-            char SplitVal = Memory[(int)Commands[i + 2]].Value[0];
-            
+            string Val = Memory[(int)Code[i + 1]].Value;
+            char SplitVal = Memory[(int)Code[i + 2]].Value[0];
+
             List<string> Split = Val.Split(SplitVal).ToList();
-            
-            Memory[(int)Commands[i + 3]].Value = Split[0];
+
+            Memory[(int)Code[i + 3]].Value = Split[0];
             if (Split.Count > 1)
-                Memory[(int)Commands[i + 4]].Value = String.Join("", Split.Skip(1).ToArray());
+                Memory[(int)Code[i + 4]].Value = String.Join("", Split.Skip(1).ToArray());
 
             return i + 5;
         }
-        
-        public static int LENGTH(int i, ref List<Variable> Memory, List<long> Commands)
+
+        public int LENGTH(int i)
         {
-            if ((Memory[(int)Commands[i + 1]].Type == (int)VarTypes.INTEGER) || (Memory[(int)Commands[i + 1]].Type == (int)VarTypes.DECIMAL))
-                Memory[(int)Commands[i + 2]].Value = "1";
+            if ((Memory[(int)Code[i + 1]].Type == (int)VarTypes.INTEGER) || (Memory[(int)Code[i + 1]].Type == (int)VarTypes.DECIMAL))
+                Memory[(int)Code[i + 2]].Value = "1";
             else
-                Memory[(int)Commands[i + 2]].Value = Memory[(int)Commands[i + 1]].Value.Count().ToString();
-                
+                Memory[(int)Code[i + 2]].Value = Memory[(int)Code[i + 1]].Value.Count().ToString();
+
             return i + 3;
         }
 
-        public static int IF(int i, ref List<Variable> Memory, List<long> Commands)
+        public int IF(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Value.Equals("1"))
             {
@@ -340,22 +395,22 @@ namespace IASM
             }
         }
 
-        public static int EQ(int i, ref List<Variable> Memory, List<long> Commands)
+        public int EQ(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             Memory[(int)M3].Value = Convert.ToInt32(Memory[(int)M1].Value.Equals(Memory[(int)M2].Value)).ToString();
 
             return i + 4;
         }
 
-        public static int GT(int i, ref List<Variable> Memory, List<long> Commands)
+        public int GT(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
                 Memory[(int)M3].Value = Convert.ToInt32(Convert.ToInt32(Memory[(int)M1].Value) > Convert.ToInt32(Memory[(int)M2].Value)).ToString();
@@ -365,11 +420,11 @@ namespace IASM
             return i + 4;
         }
 
-        public static int LT(int i, ref List<Variable> Memory, List<long> Commands)
+        public int LT(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
                 Memory[(int)M3].Value = Convert.ToInt32(Convert.ToInt32(Memory[(int)M1].Value) < Convert.ToInt32(Memory[(int)M2].Value)).ToString();
@@ -379,11 +434,11 @@ namespace IASM
             return i + 4;
         }
 
-        public static int GE(int i, ref List<Variable> Memory, List<long> Commands)
+        public int GE(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
                 Memory[(int)M3].Value = Convert.ToInt32(Convert.ToInt32(Memory[(int)M1].Value) >= Convert.ToInt32(Memory[(int)M2].Value)).ToString();
@@ -393,11 +448,11 @@ namespace IASM
             return i + 4;
         }
 
-        public static int LE(int i, ref List<Variable> Memory, List<long> Commands)
+        public int LE(int i)
         {
-            long M1 = Commands[i + 1];
-            long M2 = Commands[i + 2];
-            long M3 = Commands[i + 3];
+            long M1 = Code[i + 1];
+            long M2 = Code[i + 2];
+            long M3 = Code[i + 3];
 
             if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
                 Memory[(int)M3].Value = Convert.ToInt32(Convert.ToInt32(Memory[(int)M1].Value) <= Convert.ToInt32(Memory[(int)M2].Value)).ToString();
@@ -407,12 +462,12 @@ namespace IASM
             return i + 4;
         }
 
-        public static void ShowError(string Message)
+        public void ShowError(string Message)
         {
             ShowError(Message, "");
         }
 
-        public static void ShowError(string Message, params string[] args)
+        public void ShowError(string Message, params string[] args)
         {
             Console.WriteLine(Message, args);
             Console.ReadLine();
@@ -421,3 +476,4 @@ namespace IASM
         }
     }
 }
+
