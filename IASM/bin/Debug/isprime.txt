@@ -1,0 +1,29 @@
+# This program doesn't handle multiples of two at the moment...
+mov 3 i
+mov 0 n
+mov 0 rem
+mov 0 sq
+mov 1 isprime
+
+mov 0 zero
+mov 1 one
+mov 2 two
+
+arg one n
+
+:loop
+
+mult i i sq
+gotogr sq n end
+
+mod n i rem
+
+add two i i
+gotogr rem zero loop
+mov 0 isprime
+print i
+
+:end
+
+print isprime
+

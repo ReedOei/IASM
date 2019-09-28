@@ -1,0 +1,7 @@
+mov 0 x
+
+:start
+call x clickpos 465 455
+delay 100000
+goto start
+

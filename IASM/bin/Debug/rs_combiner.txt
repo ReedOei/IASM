@@ -1,0 +1,121 @@
+# To use this script: start in lumbridge basement right next to the culinaromancer's chest, and open the chest. The script will grab two cursor locations for each item to combine. It will then do the combining. Note that we can only work with items whose left click is "Use' (otherwise they will be eaten, etc.)
+mov 0 x
+
+mov 0 first_x
+mov 0 first_y
+
+mov 0 second_x
+mov 0 second_y
+
+mov : splitchar
+
+:getcoords
+
+delay 2000
+
+call x cursorpos
+split x splitchar first_x first_y
+print x
+print first_x
+print first_y
+
+delay 2000
+
+call x cursorpos
+split x splitchar first_x first_y
+print x
+print first_x
+print first_y
+
+delay 2000
+
+# Close the bank chest
+call x clickpos 1089 89
+delay 2000
+
+:runcombine
+
+# Click on the bank chest (culinaromancer)
+call x clickpos 1058 549 
+delay 2000
+call x clickpos 1058 540 
+delay 2000
+
+# Dump everything into the chest
+call x clickpos 1043 844
+delay 2000
+
+# 14 times, to fill our inventory with half of these
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+call x clickpos first_x first_y
+delay 500
+
+# Now grab the second item
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+call x clickpos second_x second_y
+delay 500
+
+# Now close the chest and start combining
+call x clickpos 1089 89
+delay 1000
+
+call x clickpos 1818 915
+delay 1000
+call x clickpos 1771 911
+delay 2000
+
+call x clickpos 318 1002
+delay 25000
+
+goto runcombine
+

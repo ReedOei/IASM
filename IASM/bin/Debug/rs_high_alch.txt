@@ -1,0 +1,119 @@
+# This script will high alch onyx bolts (e) for you, provided you are at the grand exchange. It will buy the bolts (your last two offer spots (members) should be unused), the nature runes, and then alch them all before repeating. You can set the "buyinc" variable to some positive number if you want to buy more bolts/runes for every run (do this if you are making a profit).
+
+mov 0 x
+mov 1 inc
+mov 1 buyinc
+mov 80 buynum
+mov 0 counter
+mov 0 max
+mov 0 len
+
+mov 0 zero
+mov 1 one
+
+arg one max
+length max len
+gotoeq zero len setdefaultmax
+goto afterargs
+
+:setdefaultmax
+mov 0 max
+goto afterargs
+
+:afterargs
+
+delay 2000
+
+gotoeq max zero buymaterials
+goto alchstart
+
+:buymaterials
+
+# Talk to Grand Exchange Clerk
+call x clickpos 987 488
+delay 1500
+# Twice in case of failure
+call x clickpos 987 488
+delay 1500
+# Continue through dialogue
+call x clickpos 325 1024
+delay 1500
+call x clickpos 336 980
+delay 1500
+call x clickpos 316 1025
+delay 1500
+
+# Buy the onyx bolts
+call x clickpos 895 566
+delay 1500
+call x type 50 onyx bolts (e)
+delay 1500
+call x clickpos 142 959
+delay 1500
+call x clickpos 844 506
+delay 1500
+call x type 50 buynum
+delay 1500
+call x keypress Return
+delay 1500
+# Increase the price so we're guaranteed to get them
+call x clickpos 1052 505
+delay 1500
+call x clickpos 863 591
+delay 45000
+# Collect items
+call x clickpos 1055 364
+delay 1500
+
+# Buy the nature runes
+call x clickpos 895 566
+delay 1500
+call x type 50 nature rune
+delay 1500
+call x clickpos 142 959
+delay 1500
+call x clickpos 844 506
+delay 1500
+call x type 50 buynum
+delay 1500
+call x keypress Return
+delay 1500
+# Increase the price so we're guaranteed to get them
+call x clickpos 1052 505
+delay 1500
+call x clickpos 863 591
+delay 45000
+# Collect items
+call x clickpos 1055 364
+delay 1500
+
+# Close the ge window
+call x clickpos 1093 333
+
+mov buynum max
+
+:alchstart
+# Click on the magic book
+call x clickpos 1902 756
+delay 1500
+
+:alch
+gotoeq counter max end
+
+# Start alching
+delay 900
+call x clickpos 1880 893
+delay 900
+call x clickpos 1781 808
+delay 900
+add inc counter counter
+
+goto alch
+
+:end
+
+delay 15000
+mov 0 counter
+add buyinc buynum buynum
+goto buymaterials
+
