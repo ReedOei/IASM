@@ -32,40 +32,6 @@ namespace IASM
         GOTOVAR
     }
 
-    public class Variable
-    {
-        public int Type;
-
-        public string Value;
-
-        public Variable(int Type, string Value)
-        {
-            this.Type = Type;
-
-            this.Value = Value;
-        }
-
-        public int IntValue()
-        {
-            return Convert.ToInt32(Value);
-        }
-
-        public string StringValue()
-        {
-            return Value;
-        }
-
-        public double DoubleValue()
-        {
-            return Convert.ToDouble(Value);
-        }
-
-        public override string ToString()
-        {
-            return Value;
-        }
-    }
-
     public class Runtime
     {
         public delegate int Command(int i);
@@ -142,15 +108,15 @@ namespace IASM
             return Memory[(int)i];
         }
 
-        public void SetMemory(long i, string val)
+        public void SetMemory(long i, Value val)
         {
-            GetMemory(i).Value = val;
+            GetMemory(i).Val = val;
         }
 
         public int GOTOVAR(int i)
         {
             long M1 = Code[i + 1];
-            return GetMemory(M1).IntValue();
+            return (int)GetMemory(M1).IntValue();
         }
 
         public int ARG(int i)
@@ -158,15 +124,15 @@ namespace IASM
             long M1 = Code[i + 1];
             long M2 = Code[i + 2];
 
-            int ArgIndex = GetMemory(M1).IntValue();
+            int ArgIndex = (int)GetMemory(M1).IntValue();
 
             if (ArgIndex < Args.Count())
             {
-                SetMemory(M2, Args[GetMemory(M1).IntValue()]);
+                GetMemory(M2).SetValue(Args[ArgIndex]);
             }
             else
             {
-                SetMemory(M2, "");
+                SetMemory(M2, new StringValue(""));
             }
 
             return i + 3;
@@ -188,7 +154,7 @@ namespace IASM
 
             long Data = Code[i + 3];
 
-            string M1 = "";
+            Value M1 = new StringValue("");
 
             int Length = 0;
             if (IsVar == 1) //A constant
@@ -197,29 +163,39 @@ namespace IASM
                 {
                     Length = (int)Code[i + 3];
 
-                    for (int x = i + 4; x < (i + 4 + Length); x++)
+                    string V = "";
+
+                    for (int x = i + 4; x < i + 4 + Length; x++)
                     {
-                        M1 += Convert.ToChar(Code[x]);
+                        V += Convert.ToChar(Code[x]);
                     }
+
+                    M1 = new StringValue(V);
                 }
                 else if (Type == (int)VarTypes.DECIMAL)
                 {
                     Length = 1;
 
-                    M1 = Convert.ToDouble(Code[i + 3]) + Convert.ToDouble("0." + Code[i + 4].ToString()).ToString();
+                    M1 = new DoubleValue(Convert.ToDouble(Code[i + 3]) + Convert.ToDouble("0." + Code[i + 4].ToString()));
                 }
                 else
-                    M1 = Code[i + 3].ToString();
+                {
+                    M1 = new IntValue(Convert.ToInt64(Code[i + 3].ToString()));
+                }
             }
             else
-                M1 = Memory[(int)Data].Value;
+            {
+                M1 = Memory[(int)Data].Val;
+            }
 
             long M2 = Code[i + 4 + Length];
 
             if (M2 >= Memory.Count)
-                Memory.Add(new Variable(Type, ""));
+            {
+                Memory.Add(new Variable(Type, new StringValue("")));
+            }
 
-            Memory[(int)M2].Value = M1;
+            Memory[(int)M2].Val = M1;
 
             return i + 5 + Length;
         }
@@ -230,12 +206,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
-                Memory[(int)M3].Value = (Convert.ToInt32(Memory[(int)M1].Value) + Convert.ToInt32(Memory[(int)M2].Value)).ToString();
-            else if (Memory[(int)M1].Type == (int)VarTypes.DECIMAL)
-                Memory[(int)M3].Value = (Convert.ToDouble(Memory[(int)M1].Value) + Convert.ToDouble(Memory[(int)M2].Value)).ToString();
-            else
-                Memory[(int)M3].Value = Memory[(int)M1].Value + Memory[(int)M2].Value;
+            Memory[(int)M3].Val = Memory[(int)M1].Val.Add(Memory[(int)M2].Val);
 
             return i + 4;
         }
@@ -246,10 +217,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
-                Memory[(int)M3].Value = (Convert.ToInt32(Memory[(int)M1].Value) - Convert.ToInt32(Memory[(int)M2].Value)).ToString();
-            else
-                Memory[(int)M3].Value = (Convert.ToDouble(Memory[(int)M1].Value) - Convert.ToDouble(Memory[(int)M2].Value)).ToString();
+            Memory[(int)M3].Val = Memory[(int)M1].Val.Sub(Memory[(int)M2].Val);
 
             return i + 4;
         }
@@ -260,10 +228,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
-                Memory[(int)M3].Value = (Convert.ToInt32(Memory[(int)M1].Value) * Convert.ToInt32(Memory[(int)M2].Value)).ToString();
-            else
-                Memory[(int)M3].Value = (Convert.ToDouble(Memory[(int)M1].Value) * Convert.ToDouble(Memory[(int)M2].Value)).ToString();
+            Memory[(int)M3].Val = Memory[(int)M1].Val.Mul(Memory[(int)M2].Val);
 
             return i + 4;
         }
@@ -274,15 +239,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Convert.ToDouble(Memory[(int)M2].Value) == 0)
-            {
-                ShowError("Attempted to divide by 0! Memory: {0}:{1}, {2}:{3}. Type = {4}", M1.ToString(), Memory[(int)M1].Value, M2.ToString(), Memory[(int)M2].Value, Memory[(int)M1].Type.ToString());
-            }
-
-            if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
-                Memory[(int)M3].Value = (Convert.ToInt32(Memory[(int)M1].Value) / Convert.ToInt32(Memory[(int)M2].Value)).ToString();
-            else
-                Memory[(int)M3].Value = (Convert.ToDouble(Memory[(int)M1].Value) / Convert.ToDouble(Memory[(int)M2].Value)).ToString();
+            Memory[(int)M3].Val = Memory[(int)M1].Val.Div(Memory[(int)M2].Val);
 
             return i + 4;
         }
@@ -293,7 +250,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            Memory[(int)M3].Value = (Convert.ToInt32(Memory[(int)M1].Value) % Convert.ToInt32(Memory[(int)M2].Value)).ToString();
+            Memory[(int)M3].Val = Memory[(int)M1].Val.Mod(Memory[(int)M2].Val);
 
             return i + 4;
         }
@@ -304,8 +261,10 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Memory[(int)M1].Value.Equals(Memory[(int)M2].Value))
+            if (Memory[(int)M1].Val.Eq(Memory[(int)M2].Val))
+            {
                 return (int)M3;
+            }
 
             return i + 4;
         }
@@ -315,20 +274,10 @@ namespace IASM
             long M1 = Code[i + 1];
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
-
-            if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
+            
+            if (Memory[(int)M1].Val.Gt(Memory[(int)M2].Val))
             {
-                if (Convert.ToInt32(Memory[(int)M1].Value) > Convert.ToInt32(Memory[(int)M2].Value))
-                    return (int)M3;
-            }
-            else if (Memory[(int)M1].Type == (int)VarTypes.DECIMAL)
-            {
-                if (Convert.ToDouble(Memory[(int)M1].Value) > Convert.ToDouble(Memory[(int)M2].Value))
-                    return (int)M3;
-            }
-            else
-            {
-                ShowError("Cannot compare non-number types with greater than: Memory: {0}:{1}. Type={2}", M1.ToString(), Memory[(int)M1].ToString(), Memory[(int)M1].Type.ToString());
+                return (int)M3;
             }
 
             return i + 4;
@@ -357,21 +306,23 @@ namespace IASM
 
         public int SPLIT(int i)
         {
-            string Val = Memory[(int)Code[i + 1]].Value;
-            char SplitVal = Memory[(int)Code[i + 2]].Value[0];
+            string Val = Memory[(int)Code[i + 1]].Val.ToString();
+            char SplitVal = Memory[(int)Code[i + 2]].Val.ToString()[0];
 
             List<string> Split = Val.Split(SplitVal).ToList();
 
-            Memory[(int)Code[i + 3]].Value = Split[0];
+            Memory[(int)Code[i + 3]].Val = new StringValue(Split[0]);
             if (Split.Count > 1)
-                Memory[(int)Code[i + 4]].Value = String.Join("", Split.Skip(1).ToArray());
+            {
+                Memory[(int)Code[i + 4]].Val = new StringValue(String.Join(SplitVal + "", Split.Skip(1).ToArray()));
+            }
 
             return i + 5;
         }
 
         public int LENGTH(int i)
         {
-            Memory[(int)Code[i + 2]].Value = Memory[(int)Code[i + 1]].Value.Count().ToString();
+            Memory[(int)Code[i + 2]].Val = new IntValue(Memory[(int)Code[i + 1]].Val.Length());
 
             return i + 3;
         }
@@ -382,7 +333,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Memory[(int)M1].Value.Equals("1"))
+            if (Memory[(int)M1].Val.ToString().Equals("1"))
             {
                 return (int)M2;
             }
@@ -398,7 +349,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            Memory[(int)M3].Value = Convert.ToInt32(Memory[(int)M1].Value.Equals(Memory[(int)M2].Value)).ToString();
+            Memory[(int)M3].Val = new IntValue(Convert.ToInt64(Memory[(int)M1].Val.Eq(Memory[(int)M2].Val)));
 
             return i + 4;
         }
@@ -409,10 +360,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
-                Memory[(int)M3].Value = Convert.ToInt32(Convert.ToInt32(Memory[(int)M1].Value) > Convert.ToInt32(Memory[(int)M2].Value)).ToString();
-            else
-                Memory[(int)M3].Value = Convert.ToInt32(Convert.ToDouble(Memory[(int)M1].Value) > Convert.ToDouble(Memory[(int)M2].Value)).ToString();
+            Memory[(int)M3].Val = new IntValue(Convert.ToInt64(Memory[(int)M1].Val.Gt(Memory[(int)M2].Val)));
 
             return i + 4;
         }
@@ -423,10 +371,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
-                Memory[(int)M3].Value = Convert.ToInt32(Convert.ToInt32(Memory[(int)M1].Value) < Convert.ToInt32(Memory[(int)M2].Value)).ToString();
-            else
-                Memory[(int)M3].Value = Convert.ToInt32(Convert.ToDouble(Memory[(int)M1].Value) < Convert.ToDouble(Memory[(int)M2].Value)).ToString();
+            Memory[(int)M3].Val = new IntValue(Convert.ToInt64(Memory[(int)M1].Val.Lt(Memory[(int)M2].Val)));
 
             return i + 4;
         }
@@ -437,10 +382,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
-                Memory[(int)M3].Value = Convert.ToInt32(Convert.ToInt32(Memory[(int)M1].Value) >= Convert.ToInt32(Memory[(int)M2].Value)).ToString();
-            else
-                Memory[(int)M3].Value = Convert.ToInt32(Convert.ToDouble(Memory[(int)M1].Value) >= Convert.ToDouble(Memory[(int)M2].Value)).ToString();
+            Memory[(int)M3].Val = new IntValue(Convert.ToInt64(Memory[(int)M1].Val.Gt(Memory[(int)M2].Val) || Memory[(int)M1].Val.Eq(Memory[(int)M2].Val)));
 
             return i + 4;
         }
@@ -451,10 +393,7 @@ namespace IASM
             long M2 = Code[i + 2];
             long M3 = Code[i + 3];
 
-            if (Memory[(int)M1].Type == (int)VarTypes.INTEGER)
-                Memory[(int)M3].Value = Convert.ToInt32(Convert.ToInt32(Memory[(int)M1].Value) <= Convert.ToInt32(Memory[(int)M2].Value)).ToString();
-            else
-                Memory[(int)M3].Value = Convert.ToInt32(Convert.ToDouble(Memory[(int)M1].Value) <= Convert.ToDouble(Memory[(int)M2].Value)).ToString();
+            Memory[(int)M3].Val = new IntValue(Convert.ToInt64(Memory[(int)M1].Val.Lt(Memory[(int)M2].Val) || Memory[(int)M1].Val.Eq(Memory[(int)M2].Val)));
 
             return i + 4;
         }
@@ -467,9 +406,6 @@ namespace IASM
         public void ShowError(string Message, params string[] args)
         {
             Console.WriteLine(Message, args);
-            Console.ReadLine();
-
-            System.Threading.Thread.CurrentThread.Abort();
         }
     }
 }

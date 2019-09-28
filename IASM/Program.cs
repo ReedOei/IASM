@@ -22,7 +22,7 @@ namespace IASM
                     Applied.RemoveAt(k);
                     int VariableIndex = (int)Applied[k];
                     Applied.RemoveAt(k);
-                    string VariableValue = Memory[VariableIndex].Value;
+                    string VariableValue = Memory[VariableIndex].Val.ToString();
 
                     for (int v = 0; v < VariableValue.Count(); v++ )
                     {
@@ -38,9 +38,7 @@ namespace IASM
 
             string Result = ProcessCommand(Params);
 
-            Memory[(int)Commands[i + 1]].Value = Result;
-
-            //Console.WriteLine(Result);
+            Memory[(int)Commands[i + 1]].SetValue(Result);
 
             return i + (int)Commands[i + 2] + 4 - 1;
         }
@@ -61,10 +59,8 @@ namespace IASM
             }
             else if (CommandName.Equals("type"))
             {
-                var TypeString = string.Join(" ", CommandArgs.Skip(1));
-                Console.WriteLine(TypeString);
+                var TypeString = string.Join(" ", CommandArgs.Skip(1)).Trim();
                 Type(Convert.ToInt32(CommandArgs[0]), TypeString);
-
                 return Params;
             }
             else
@@ -77,15 +73,13 @@ namespace IASM
         {
             var Result = new Dictionary<string, VirtualKeyCode>();
 
+            Result[" "] = VirtualKeyCode.SPACE;
+
             foreach (VirtualKeyCode kc in Enum.GetValues(typeof(VirtualKeyCode)))
             {
                 if (kc.ToString().StartsWith("VK_"))
                 {
                     Result[kc.ToString().Substring(3)] = kc;
-                }
-                else if (kc == VirtualKeyCode.SPACE)
-                {
-                    Result[" "] = kc;
                 }
                 else
                 {
@@ -98,21 +92,13 @@ namespace IASM
 
         public static string Type(int Delay, string Str)
         {
-            List<string> Keys = new List<string>();
-
-            Str = Str.ToUpper();
-
-            while (Str.Length > 0)
+            foreach (char c in Str)
             {
-                // We do it this way so that users can type things other than single keys
-                var KeyCode = Keycodes().First(kc => Str.StartsWith(kc.Key));
-                PressKey(KeyCode.Value.ToString());
-
-                Str = Str.Substring(KeyCode.Key.Length);
+                new InputSimulator().Keyboard.TextEntry(c);
 
                 Thread.Sleep(Delay);
             }
-
+            
             return Str;
         }
 

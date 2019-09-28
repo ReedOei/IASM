@@ -437,12 +437,6 @@ namespace ImageRecognition
 
                 TimeSpan Length = Ticks.Elapsed;
 
-                if (Program.WriteResult)
-                {
-                    Console.WriteLine(Result);
-                }
-                //Console.WriteLine("Elapsed: " + String.Format("{0:00}:{1:00}:{2:00}.{3:00}", Length.Hours, Length.Minutes, Length.Seconds, Length.Milliseconds / 10));
-
                 return Result;
             }
             catch (Exception E)
